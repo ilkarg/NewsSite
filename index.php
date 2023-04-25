@@ -14,6 +14,7 @@ use PHPRouter\Router;
 
 // Создание системных объектов
 $router = new Router();
+$orm = new MySQL("localhost", "root", "", "news_site", 3306);
 $request = new Request();
 
 // Подключение контроллеров

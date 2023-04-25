@@ -11,12 +11,12 @@ class PageController {
     }
 
     public static function login() {
-        $template = new Template(__DIR__ . "/../pages/index.html");
+        $template = new Template(__DIR__ . "/../pages/login.html");
         echo View::createFromTemplate($template);
     }
 
     public static function registration() {
-        $template = new Template(__DIR__ . "/../pages/index.html");
+        $template = new Template(__DIR__ . "/../pages/registration.html");
         echo View::createFromTemplate($template);
     }
 }
