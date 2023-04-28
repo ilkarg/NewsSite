@@ -75,9 +75,11 @@ function getPosts() {
     }).then(function(response) {
         return response.json().then(function(resp) {
             console.log(resp);
-            Object.keys(resp).map(function(key) {
-                createPost(resp[key].title, resp[key].body);
-            });
+            if (!resp["response"] && Object.keys(resp).length > 0) {
+                Object.keys(resp).map(function(key) {
+                    createPost(resp[key].title, resp[key].body);
+                });
+            }
         });
     });
 }
