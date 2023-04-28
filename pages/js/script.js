@@ -32,3 +32,78 @@ function login() {
         });
     });
 }
+
+function logout() {
+    fetch('api/v1/logout', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }).then(function(response) {
+        return response.json().then(function(resp) {
+            console.log(resp);
+        });
+    });
+}
+
+function addPost() {
+    let title = document.querySelector("#postTitle").value;
+    let body = document.querySelector("#postBody").value;
+    fetch('api/v1/addPost', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            title: title,
+            body: body
+        })
+    }).then(function(response) {
+        return response.json().then(function(resp) {
+            console.log(resp);
+            createPost(title, body);
+        });
+    });
+}
+
+function getPosts() {
+    fetch('api/v1/getPosts', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }).then(function(response) {
+        return response.json().then(function(resp) {
+            console.log(resp);
+            Object.keys(resp).map(function(key) {
+                createPost(resp[key].title, resp[key].body);
+            });
+        });
+    });
+}
+
+function isAdmin() {
+    fetch('api/v1/isAdmin', {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }).then(function(response) {
+        return response.json().then(function(resp) {
+            if (resp["response"] === "admin") {
+                document.querySelector("#addPostForm").style.visibility = "visible";
+            }
+        });
+    });
+}
+
+function createPost(title, body) {
+    let post = document.createElement("div");
+    let pTitle = document.createElement("p");
+    pTitle.innerHTML = `Title: ${title}`;
+    let pBody = document.createElement("p");
+    pBody.innerHTML = `Body: ${body}`;
+    post.appendChild(pTitle);
+    post.appendChild(pBody);
+    document.querySelector("#posts").appendChild(post);
+}

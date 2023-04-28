@@ -3,6 +3,11 @@
 $router->get("/", "PageController::index");
 $router->get("login", "PageController::login");
 $router->get("registration", "PageController::registration");
+$router->get("posts", "PageController::posts");
 
 $router->post("api/v1/login", "AuthController::login");
 $router->post("api/v1/registration", "AuthController::registration");
+$router->post("api/v1/logout", "AuthController::logout");
+$router->post("api/v1/isAdmin", "AuthController::isAdmin");
+$router->post("api/v1/addPost", "PostController::addPost");
+$router->post("api/v1/getPosts", "PostController::getPosts");

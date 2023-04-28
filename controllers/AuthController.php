@@ -1,48 +1,28 @@
 <?php
 
-include __DIR__ . '/../models/User.php';
-
-use PHPSystem\System;
+include __DIR__ . "/../models/User.php";
 
 class AuthController {
 	public static function login() {
-        global $router, $orm;
+        global $router;
         $data = $router->getPostRouteData();
         if ($data != null) {
             $user_model = new User($data["login"], $data["password"]);
-            $orm->connect();
-            $user = R::find("users", "BINARY login = ? AND password = ?", [$user_model->login, md5($user_model->password)]);
-            if ($user == null) {
-                echo json_encode(array("response" => "Неверные логин или пароль"));
-            } else {
-                echo json_encode($user[1]);
-            }
+            echo QueryController::loginQuery($user_model->login, $user_model->password);
         } else {
             echo json_encode(array("response" => "Данные не дошли или неверные имена полей"));
         }
     }
 
     public static function registration() {
-        global $router, $orm;
+        global $router;
         $data = $router->getPostRouteData();
         if ($data != null) {
             if ($data["password"] == $data["repeatPassword"]) {
-                $user_model = new User($data["login"], md5($data["password"]));
-                $orm->connect();
-                $user = R::dispense('users');
+                $user_model = new User($data["login"], $data["password"]);
                 $result = $user_model->validate();
                 if ($result["status"]) {
-                    $user->login = $user_model->login;
-                    $user->password = $user_model->password;
-                    try {
-                        R::store($user);
-                    } catch (RedBeanPHP\RedException\SQL $except) {
-                        if (System::startsWith($except->getMessage(), "SQLSTATE[23000]: Integrity constraint violation")) {
-                            echo json_encode(array("response" => "User already exists"));
-                            return;
-                        }
-                    }
-                    echo json_encode(array("response" => "OK"));
+                    echo QueryController::registrationQuery($user_model->login, $user_model->password);
                 } else {
                     echo json_encode(array("response" => $result["message"]));
                 }
@@ -51,6 +31,25 @@ class AuthController {
             }
         } else {
             echo json_encode(array("response" => "Данные не дошли или неверные имена полей"));
+        }
+    }
+
+    public static function logout() {
+        session_start();
+        if (isset($_SESSION["user"])) {
+            unset($_SESSION["user"]);
+            echo json_encode(array("response" => "Вы успешно вышли из аккаунта"));
+        } else {
+            echo json_encode(array("response" => "Вы и так не находитесь в аккаунте"));
+        }
+    }
+
+    public static function isAdmin() {
+        session_start();
+        if (isset($_SESSION["user"]) && $_SESSION["user"]->login == "admin") {
+            echo json_encode(array("response" => "admin"));
+        } else {
+            echo json_encode(array("response" => "not_admin"));
         }
     }
 }

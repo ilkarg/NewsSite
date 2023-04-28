@@ -19,4 +19,9 @@ class PageController {
         $template = new Template(__DIR__ . "/../pages/registration.html");
         echo View::createFromTemplate($template);
     }
+
+    public static function posts() {
+        $template = new Template(__DIR__ . "/../pages/posts.html");
+        echo View::createFromTemplate($template);
+    }
 }

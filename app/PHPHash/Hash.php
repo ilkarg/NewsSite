@@ -3,6 +3,7 @@
 namespace PHPHash;
 
 use \PHPExceptionHandler\ExceptionHandler;
+use \PHPSystem\System;
 
 class Hash {
     public static function sha256(string $value, string $salt, int $count) {
