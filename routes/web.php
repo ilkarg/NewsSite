@@ -11,3 +11,5 @@ $router->post("api/v1/logout", "AuthController::logout");
 $router->post("api/v1/isAdmin", "AuthController::isAdmin");
 $router->post("api/v1/addPost", "PostController::addPost");
 $router->post("api/v1/getPosts", "PostController::getPosts");
+$router->post("api/v1/getPostById", "PostController::getPostById");
+$router->post("api/v1/getPostsByTag", "PostController::getPostsByTag");
