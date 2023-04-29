@@ -67,7 +67,16 @@ function addPost() {
         return response.json().then(function (resp) {
             console.log(resp);
             body = body.replaceAll("\n", "<br>");
-            createPostCard(title, body, tag, publicationTime);
+            fetch(`${window.location.origin}/api/v1/getLastPostId`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then(function(response) {
+                return response.json().then(function(resp) {
+                    createPostCard(title, tag, publicationTime, resp["id"]);
+                })
+            });
         });
     });
 }
@@ -94,6 +103,7 @@ function getPosts() {
             }
             getPostsByTag(tag);
         } else if (arg.startsWith("id=")) {
+            document.querySelector("#addPostForm").style.visibility = "hidden";
             let id = arg.substring(arg.indexOf("=") + 1, arg.length);
             getPostById(id);
         }
@@ -163,13 +173,32 @@ function redirectToSecurityNews() {
     return;
 }
 
+function translateTag(tag) {
+    if (tag === "security") {
+        return "Безопасность";
+    } else if (tag === "administration") {
+        return "Администрация";
+    } else if (tag === "social") {
+        return "Социальная сфера";
+    } else if (tag === "health") {
+        return "Здравоохранение";
+    } else if (tag === "studying") {
+        return "Образование";
+    }
+}
+
 function createPostCard(title, tag, publicationTime, id) {
+    let pageTag = window.location.search;
+    pageTag = pageTag.substring(pageTag.indexOf("=") + 1, pageTag.length);
+    if (pageTag !== tag) {
+        return;
+    }
     let post = document.createElement("div");
     let aTitle = document.createElement("a");
     aTitle.innerHTML = `Title: ${title}`;
-    aTitle.href = `?id=${id}`
+    aTitle.href = `?id=${id}`;
     let pTag = document.createElement("p");
-    pTag.innerText = `Tag: ${tag}`;
+    pTag.innerText = `Tag: ${translateTag(tag)}`;
     let pPublicationTime = document.createElement("p");
     pPublicationTime.innerText = `Publication time: ${publicationTime}`;
     post.appendChild(aTitle);

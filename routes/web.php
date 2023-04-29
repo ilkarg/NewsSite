@@ -13,3 +13,4 @@ $router->post("api/v1/addPost", "PostController::addPost");
 $router->post("api/v1/getPosts", "PostController::getPosts");
 $router->post("api/v1/getPostById", "PostController::getPostById");
 $router->post("api/v1/getPostsByTag", "PostController::getPostsByTag");
+$router->post("api/v1/getLastPostId", "PostController::getLastPostId");

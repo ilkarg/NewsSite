@@ -46,4 +46,9 @@ class PostController {
         $posts = QueryController::getPostsQuery();
         echo $posts;
     }
+
+    public static function getLastPostId() {
+        $id = QueryController::getLastPostId();
+        echo $id;
+    }
 }

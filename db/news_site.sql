@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Апр 28 2023 г., 19:23
+-- Время создания: Апр 29 2023 г., 11:54
 -- Версия сервера: 8.0.24
 -- Версия PHP: 8.0.8
 
@@ -30,17 +30,21 @@ SET time_zone = "+00:00";
 CREATE TABLE `posts` (
   `id` int NOT NULL,
   `title` text NOT NULL,
-  `body` text NOT NULL
+  `body` text NOT NULL,
+  `tag` text NOT NULL,
+  `publication_time` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
 -- Дамп данных таблицы `posts`
 --
 
-INSERT INTO `posts` (`id`, `title`, `body`) VALUES
-(1, 'Post 1 title', 'Post 1 body'),
-(2, 'Post 2 title', 'Post 2 body'),
-(3, 'Post 3 title', 'Post 3 body');
+INSERT INTO `posts` (`id`, `title`, `body`, `tag`, `publication_time`) VALUES
+(1, 'Post 1 title', 'Post 1 body', 'security', '14:39'),
+(2, 'Post 2 title', 'Post 2 body', 'security', '14:40'),
+(3, 'Post 3 title', 'Post 3 body', 'security', '14:52'),
+(4, 'Post 4 title', 'Post 4 body', 'administration', '14:52'),
+(5, 'Post 5 title', 'Post 5 body', 'security', '14:54');
 
 -- --------------------------------------------------------
 
@@ -86,7 +90,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT для таблицы `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT для таблицы `users`

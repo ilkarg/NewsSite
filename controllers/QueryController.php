@@ -53,16 +53,6 @@ class QueryController {
         return json_encode(array("response" => "Пост успешно создан"));
     }
 
-    public static function getPostsQuery() {
-        global $orm;
-        $orm->connect();
-        $posts = R::findAll("posts");
-        if ($posts == null) {
-            return json_encode(array("response" => "Посты не найдены"));
-        }
-        return json_encode($posts);
-    }
-
     public static function getPostByIdQuery(int $id) {
         global $orm;
         $orm->connect();
@@ -81,5 +71,12 @@ class QueryController {
             return json_encode(array("response" => "Посты не найдены"));
         }
         return json_encode($posts);
+    }
+
+    public static function getLastPostId() {
+        global $orm;
+        $orm->connect();
+        $post = R::findLast("posts");
+        return json_encode(array("id" => $post->id));
     }
 }
