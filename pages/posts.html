@@ -12,13 +12,17 @@
         <label for="postBody">Содержимое</label>
         <textarea id="postBody" name="postBody" rows="10" cols="45"></textarea>
         <br><br>
-        <select id="postTag">
+        <label for="postTag">Категория</label>
+        <select id="postTag" name="postTag">
             <option value="security">Безопасность</option>
             <option value="administration">Администрация</option>
             <option value="social">Социальная сфера</option>
             <option value="health">Здравоохранение</option>
             <option value="studying">Образование</option>
         </select>
+        <br><br>
+        <label for="postImage">Изображение</label>
+        <input id="postImage" name="postImage" type="file" accept="image/*">
         <br><br>
         <button onclick="addPost()">Добавить пост</button>
     </div>

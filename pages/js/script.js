@@ -47,34 +47,33 @@ function logout() {
 }
 
 function addPost() {
-    let title = document.querySelector("#postTitle").value;
-    let body = document.querySelector("#postBody").value;
-    let tag = document.querySelector("#postTag").value;
     let date = new Date();
-    let publicationTime = `${date.getHours()}:${date.getMinutes()}`;
+    let hours = date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`;
+    let minutes = date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`; 
+    let image = document.querySelector("#postImage").files[0];
+    let formData = new FormData();
+    formData.append("title", document.querySelector("#postTitle").value);
+    formData.append("body", document.querySelector("#postBody").value);
+    formData.append("tag", document.querySelector("#postTag").value);
+    formData.append("publicationTime", `${hours}:${minutes}`);
+    formData.append("image", image, image.name);
     fetch(`${window.location.origin}/api/v1/addPost`, {
         method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            title: title,
-            body: body,
-            tag: tag,
-            publicationTime: publicationTime
-        })
+        body: formData
     }).then(function (response) {
         return response.json().then(function (resp) {
             console.log(resp);
-            body = body.replaceAll("\n", "<br>");
             fetch(`${window.location.origin}/api/v1/getLastPostId`, {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }).then(function(response) {
-                return response.json().then(function(resp) {
-                    createPostCard(title, tag, publicationTime, resp["id"]);
+                method: 'POST'
+            }).then(function (response) {
+                return response.json().then(function (resp) {
+                    createPostCard(
+                        formData.get("title"), 
+                        formData.get("tag"), 
+                        formData.get("publicationTime"), 
+                        resp["id"], 
+                        `/pages/post_images/${image.name}`
+                    );
                 })
             });
         });
@@ -98,12 +97,12 @@ function getPosts() {
 
         if (arg.startsWith("tag=")) {
             let tag = arg.substring(arg.indexOf("=") + 1, arg.length);
-            if (["security", "administration", "health", "studying"].indexOf(tag) === -1) {
+            if (["security", "administration", "social", "health", "studying"].indexOf(tag) === -1) {
                 redirectToSecurityNews();
             }
             getPostsByTag(tag);
         } else if (arg.startsWith("id=")) {
-            document.querySelector("#addPostForm").style.visibility = "hidden";
+            document.querySelector("#addPostForm").style.display = "none";
             let id = arg.substring(arg.indexOf("=") + 1, arg.length);
             getPostById(id);
         }
@@ -140,7 +139,7 @@ function getPostById(id) {
             if (!resp["response"] && Object.keys(resp).length > 0) {
                 let key = Object.keys(resp)[0];
                 let body = resp[key].body.replaceAll("\n", "<br>");
-                createFullPost(resp[key].title, body, resp[key].tag, resp[key].publication_time, key);
+                createFullPost(resp[key].title, body, resp[key].tag, resp[key].publication_time, resp[key].image);
             }
         });
     });
@@ -161,7 +160,7 @@ function getPostsByTag(tag) {
             if (!resp["response"] && Object.keys(resp).length > 0) {
                 Object.keys(resp).map(function (key) {
                     let body = resp[key].body.replaceAll("\n", "<br>");
-                    createPostCard(resp[key].title, resp[key].tag, resp[key].publication_time, key);
+                    createPostCard(resp[key].title, resp[key].tag, resp[key].publication_time, key, resp[key].image);
                 });
             }
         });
@@ -187,13 +186,18 @@ function translateTag(tag) {
     }
 }
 
-function createPostCard(title, tag, publicationTime, id) {
+function createPostCard(title, tag, publicationTime, id, image) {
     let pageTag = window.location.search;
     pageTag = pageTag.substring(pageTag.indexOf("=") + 1, pageTag.length);
     if (pageTag !== tag) {
         return;
     }
     let post = document.createElement("div");
+    let postImage = document.createElement("img");
+    postImage.alt = "post image";
+    postImage.src = image;
+    postImage.width = 200;
+    postImage.height = 200;
     let aTitle = document.createElement("a");
     aTitle.innerHTML = `Title: ${title}`;
     aTitle.href = `?id=${id}`;
@@ -201,6 +205,7 @@ function createPostCard(title, tag, publicationTime, id) {
     pTag.innerText = `Tag: ${translateTag(tag)}`;
     let pPublicationTime = document.createElement("p");
     pPublicationTime.innerText = `Publication time: ${publicationTime}`;
+    post.appendChild(postImage);
     post.appendChild(aTitle);
     post.appendChild(pTag);
     post.appendChild(pPublicationTime);
@@ -208,8 +213,13 @@ function createPostCard(title, tag, publicationTime, id) {
     document.querySelector("#posts").appendChild(post);
 }
 
-function createFullPost(title, body, tag, publicationTime) {
+function createFullPost(title, body, tag, publicationTime, image) {
     let post = document.createElement("div");
+    let postImage = document.createElement("img");
+    postImage.alt = "post image";
+    postImage.src = image;
+    postImage.width = 200;
+    postImage.height = 200;
     let pTitle = document.createElement("p");
     pTitle.innerHTML = `Title: ${title}`;
     let pBody = document.createElement("p");
@@ -218,6 +228,8 @@ function createFullPost(title, body, tag, publicationTime) {
     pTag.innerText = `Tag: ${tag}`;
     let pPublicationTime = document.createElement("p");
     pPublicationTime.innerText = `Publication time: ${publicationTime}`;
+    post.appendChild(postImage);
+    post.appendChild(document.createElement("br"));
     post.appendChild(pTitle);
     post.appendChild(pTag);
     post.appendChild(pPublicationTime);

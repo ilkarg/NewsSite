@@ -41,14 +41,15 @@ class QueryController {
         return json_encode(array("response" => "OK"));
     }
 
-    public static function addPostQuery(string $title, string $body, string $tag, string $publicationTime) {
+    public static function addPostQuery(string $title, string $body, string $tag, string $publicationTime, string $image) {
         global $orm;
         $orm->connect();
         $post = R::dispense("posts");
         $post->title = $title;
         $post->body = $body;
         $post->tag = $tag;
-        $post->publicationTime = $publicationTime;
+        $post->publication_time = $publicationTime;
+        $post->image = $image;
         R::store($post);
         return json_encode(array("response" => "Пост успешно создан"));
     }

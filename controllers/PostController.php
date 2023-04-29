@@ -7,12 +7,14 @@ class PostController {
         global $router;
         $data = $router->getPostRouteData();
         if ($data != null) {
-            $post_model = new Post($data["title"], $data["body"], $data["tag"], $data["publicationTime"]);
+            copy($_FILES["image"]["tmp_name"], __DIR__ . "/../pages/post_images/" . $_FILES["image"]["name"]);
+            $post_model = new Post($data["title"], $data["body"], $data["tag"], $data["publicationTime"], "/pages/post_images/" . $_FILES["image"]["name"]);
             $post = QueryController::addPostQuery(
                 $post_model->title, 
                 $post_model->body,
                 $post_model->tag,
-                $post_model->publicationTime
+                $post_model->publicationTime,
+                $post_model->image
             );
             echo $post;
         } else {
