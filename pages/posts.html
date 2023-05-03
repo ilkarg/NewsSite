@@ -1,137 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Безопасность</title>
-        <!--CSS-->
-		<link rel="stylesheet" href="/pages/css/style.css" type="text/css">
-		<!--Animate-->
-		<link rel="stylesheet" href="/pages/css/animate.min.css">
-		<!--Bootstrap CSS-->
-		<link href="/pages/css/bootstrap.min.css" rel="stylesheet" >
-    </head>
-    <body>
 
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Безопасность</title>
+    <!--CSS-->
+    <link rel="stylesheet" href="/pages/css/style.css" type="text/css">
+    <!--Animate-->
+    <link rel="stylesheet" href="/pages/css/animate.min.css">
+    <!--Bootstrap CSS-->
+    <link href="/pages/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="logo">
+            <a class="navbar-brand text-center" href="/">Sensation</a>
+        </div>
+    </div>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav m-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Новости</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="security" href="/posts/?tag=security">Безопасность</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="administration" href="/posts/?tag=administration">Администрация</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="social" href="/posts/?tag=social">Социальная сфера</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="healthcare" href="/posts/?tag=healthcare">Здравоохранение</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="education" href="/posts/?tag=education">Образование</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="authButton" href="#"><button onclick="logout()">Выйти</button></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div id="post-container" class="container">
+
+    </div>
+
+    <footer>
         <div class="container">
             <div class="logo">
                 <a class="navbar-brand text-center" href="/">Sensation</a>
             </div>
         </div>
-        <nav class="navbar navbar-expand-lg">
-            <div class="container">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                  </button>
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav m-auto">
-                  <li class="nav-item">
-                    <a class="nav-link" href="/">Новости</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="security" href="/posts/?tag=security">Безопасность</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="administration" href="/posts/?tag=administration">Администрация</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="social" href="/posts/?tag=social">Социальная сфера</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="healthcare" href="/posts/?tag=healthcare">Здравоохранение</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="education" href="/posts/?tag=education">Образование</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" id="authButton" href="#"><button onclick="logout()">Выйти</button></a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </nav>
-          <div id="post-container" class="container">
-            
-          </div>
-
-          <footer>
-            <div class="container">
-                <div class="logo">
-                    <a class="navbar-brand text-center" href="/">Sensation</a>
+        <div class="footer container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <ul class="navbar-nav m-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">Новости</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/posts/?tag=security">Безопасность</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/posts/?tag=administration">Администрация</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/posts/?tag=social">Социальная сфера</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/posts/?tag=healthcare">Здравоохранение</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/posts/?tag=education">Образование</a>
+                        </li>
+                    </ul>
                 </div>
-            </div>
-            <div class="footer container">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <ul class="navbar-nav m-auto">
-                            <li class="nav-item">
-                              <a class="nav-link" href="/">Новости</a>
-                            </li>
-                            <li class="nav-item">
-                              <a class="nav-link" href="/posts/?tag=security">Безопасность</a>
-                            </li>
-                            <li class="nav-item">
-                              <a class="nav-link" href="/posts/?tag=administration">Администрация</a>
-                            </li>
-                            <li class="nav-item">
-                              <a class="nav-link" href="/posts/?tag=social">Социальная сфера</a>
-                            </li>
-                            <li class="nav-item">
-                              <a class="nav-link" href="/posts/?tag=healthcare">Здравоохранение</a>
-                            </li>
-                            <li class="nav-item">
-                              <a class="nav-link" href="/posts/?tag=education">Образование</a>
-                            </li>
-                          </ul>
-                    </div>
-                    <div class="col-lg-6">
-                        <h1 class="title-social text-center">Социальные сети</h1>
-                        <div class="social-icon">
-                            <div class="icon">
-                                <a href="#">
-                                    <img src="/pages/img/telegram.svg" alt="">
-                                </a>
-                            </div>
-                            <div class="icon">
-                                <a href="#">
-                                    <img src="/pages/img/discord.svg" alt="">
-                                </a>
-                            </div>
-                            <div class="icon">
-                                <a href="#">
-                                    <img src="/pages/img/twitch.svg" alt="">
-                                </a>
-                            </div>
-                            <div class="icon">
-                                <a href="#">
-                                    <img src="/pages/img/youtube.svg" alt="">
-                                </a>
-                            </div>
-                            <div class="icon">
-                                <a href="#">
-                                    <img src="/pages/img/whatsapp.svg" alt="">
-                                </a>
-                            </div>
+                <div class="col-lg-6">
+                    <h1 class="title-social text-center">Социальные сети</h1>
+                    <div class="social-icon">
+                        <div class="icon">
+                            <a href="#">
+                                <img src="/pages/img/telegram.svg" alt="">
+                            </a>
+                        </div>
+                        <div class="icon">
+                            <a href="#">
+                                <img src="/pages/img/discord.svg" alt="">
+                            </a>
+                        </div>
+                        <div class="icon">
+                            <a href="#">
+                                <img src="/pages/img/twitch.svg" alt="">
+                            </a>
+                        </div>
+                        <div class="icon">
+                            <a href="#">
+                                <img src="/pages/img/youtube.svg" alt="">
+                            </a>
+                        </div>
+                        <div class="icon">
+                            <a href="#">
+                                <img src="/pages/img/whatsapp.svg" alt="">
+                            </a>
                         </div>
                     </div>
-                    <div class="copyright">
-                        <h1 class="text-center">© Copyright, Sensation 2023.</h1>
-                    </div>
                 </div>
-              </div>
-          </footer>
-    </body>
+                <div class="copyright">
+                    <h1 class="text-center">© Copyright, Sensation 2023.</h1>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <!--JQuery link-->
-	<script src="/pages/js/jquery.js"></script>
-	<!--Bootstrap JS-->
-	<script src="/pages/js/bootstrap.bundle.min.js"></script>
-	<!--JS-->
-	<script src="/pages/js/script.js"></script>
+    <script src="/pages/js/jquery.js"></script>
+    <!--Bootstrap JS-->
+    <script src="/pages/js/bootstrap.bundle.min.js"></script>
+    <!--JS-->
+    <script src="/pages/js/script.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             isAuthorized();
             getPosts();
         });
     </script>
+</body>
+
 </html>
