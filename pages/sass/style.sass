@@ -362,6 +362,10 @@ footer .logo a
 	border: none !important
 	width: 210px!important
 	font-size: 20px
+	transition: .3s ease
+
+.footer .nav-link:hover
+	text-shadow: 0px 0px 20px #fff
 
 .footer .navbar-nav
 	width: 200px!important
@@ -376,6 +380,10 @@ footer .logo a
 	width: 30px
 	height: 30px
 	margin: 20px
+	transition: .3s ease
+
+.icon img:hover
+	transform: scale(1.2)
 
 .title-social
 	color: #fff
@@ -418,3 +426,111 @@ footer .logo a
 
 .description
 	margin-top: 40px
+
+.comments
+	border-top: 1px solid grey
+	margin-top: 40px
+
+.comments h1
+	color: #000
+	font-size: 30px
+	margin: 20px 0
+
+.comments .create-input textarea
+	color: #000
+	font-size: 16px
+	margin-bottom: 10px
+	width: 100%
+	border: 1px solid #236af7!important
+	border: none
+	height: 100px!important
+	outline: none
+	padding: 10px
+	font-size: 16px
+	transition: .3s ease
+	border-radius: 8px
+	resize: none
+
+.block-comments h1 
+	color: #000
+	font-size: 20px
+	margin: 20px 0
+
+.block-comments p
+	color: #000
+	font-size: 16px
+	margin: 20px 10px
+
+.time
+	color: #acacac!important
+	font-size: 12px!important
+	margin: 10px 0
+	display: flex
+	align-items: flex-end
+	justify-content: start
+
+.gooey
+	position: fixed
+	top: 0
+	left: 0
+	width: 100vw
+	height: 100vh
+	background: white
+	filter: contrast(20)
+	z-index: 5
+
+.loader-dots
+	position: absolute
+	top: 50%
+	left: 0
+	right: 0
+	width: 15%
+	margin: 0 auto
+
+.dot
+	position: absolute
+	width: 16px
+	height: 16px
+	top: 12px
+	left: 15px
+	filter: blur(4px)
+	color: #236af7
+	background: #236af7
+	border-radius: 50%
+	transform: translateX(0)
+	animation: dot 2.8s infinite
+
+.dots
+	transform: translateX(0)
+	margin-top: 12px
+	margin-left: 31px
+	animation: dots 2.8s infinite
+
+span
+	display: block
+	float: left
+	width: 16px
+	height: 16px
+	margin-left: 16px
+	filter: blur(4px)
+	color: #236af7
+	background: #236af7
+	border-radius: 50%
+
+@keyframes dot
+	50%
+		transform: translateX(96px)
+
+@keyframes dots
+	50%
+		transform: translateX(-31px)
+
+.loaded_hiding .gooey
+	transition: 0.3s opacity
+	opacity: 0
+
+.loaded .gooey
+	display: none
+
+.hidden
+	display: none

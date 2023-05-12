@@ -1,4 +1,15 @@
+function startLoad() {
+    document.querySelector(".gooey").classList.remove("hidden");
+    document.body.style.overflow = "hidden";
+}
+
+function endLoad() {
+    document.querySelector(".gooey").classList.add("hidden");
+    document.body.style.overflow = null;
+}
+
 function registration() {
+    startLoad();
     fetch(`${window.location.origin}/api/v1/registration`, {
         method: 'POST',
         headers: {
@@ -11,6 +22,7 @@ function registration() {
         })
     }).then(function (response) {
         return response.json().then(function (resp) {
+            endLoad();
             if (resp["response"] === "OK") {
                 window.location = "/";
             } else {
@@ -24,6 +36,7 @@ function registration() {
 }
 
 function login() {
+    startLoad();
     fetch(`${window.location.origin}/api/v1/login`, {
         method: 'POST',
         headers: {
@@ -35,6 +48,7 @@ function login() {
         })
     }).then(function (response) {
         return response.json().then(function (resp) {
+            endLoad();
             if (resp["response"] === "Password and repeat password do not match") {
                 resp["response"] = "Пароль и повтор пароля не совпадают";
             }
@@ -76,6 +90,7 @@ function clearAddPostForm() {
 }
 
 function addPost() {
+    startLoad();
     let date = new Date();
     let hours = date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`;
     let minutes = date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`; 
@@ -105,6 +120,7 @@ function addPost() {
                         resp["id"], 
                         `/pages/post_images/${image.name}`
                     );
+                    endLoad();
                 })
             });
         });
@@ -168,6 +184,7 @@ function isAuthorized() {
 }
 
 function getPostById(id) {
+    startLoad();
     fetch(`${window.location.origin}/api/v1/getPostById`, {
         method: 'POST',
         headers: {
@@ -183,11 +200,13 @@ function getPostById(id) {
                 let body = resp[key].body.replaceAll("\n", "<br>");
                 createFullPost(resp[key].title, body, resp[key].tag, resp[key].publication_time, resp[key].image);
             }
+            endLoad();
         });
     });
 }
 
 function getPostsByTag(tag) {
+    startLoad();
     let post = document.createElement("div");
     post.classList.add("row");
     post.id = "news";
@@ -217,6 +236,7 @@ function getPostsByTag(tag) {
                     let body = resp[key].body.replaceAll("\n", "<br>");
                     createPostCard(resp[key].title, resp[key].tag, resp[key].publication_time, key, resp[key].image);
                 });
+                endLoad();
             }
         });
     });
@@ -242,6 +262,7 @@ function translateTag(tag) {
 }
 
 function getAllPosts() {
+    startLoad();
     fetch(`${window.location.origin}/api/v1/getAllPosts`, {
         method: 'POST'
     }).then(function(response) {
@@ -251,6 +272,7 @@ function getAllPosts() {
                     createPostCard(resp[key].title, resp[key].tag, resp[key].publication_time, resp[key].id, resp[key].image);
                 });
             }
+            endLoad();
         });
     });
 }

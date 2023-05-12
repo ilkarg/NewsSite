@@ -15,7 +15,17 @@
 </head>
 
 <body>
-
+    <!--<div class="spinner-border" style="display: none" id="loader" role="status"></div>-->
+    <div class="gooey hidden">
+        <div class="loader-dots">
+            <span class="dot"></span>
+            <div class="dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <div class="logo">
             <a class="navbar-brand text-center" href="/">Sensation</a>
@@ -51,7 +61,8 @@
                         <a class="nav-link" href="/posts/?tag=education">Образование</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="authButton" href="#"><button id="button" onclick="logout()">Выйти</button></a>
+                        <a class="nav-link" id="authButton" href="#"><button id="button"
+                                onclick="logout()">Выйти</button></a>
                     </li>
                 </ul>
             </div>
@@ -64,7 +75,8 @@
                     <h1>Новости</h1>
                 </div>
                 <div class="create-posts">
-                    <button type="button" id="createPostButton" style="display: none;" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <button type="button" id="createPostButton" style="display: none;" class="btn btn-primary"
+                        data-bs-toggle="modal" data-bs-target="#exampleModal">
                         Создать пост
                     </button>
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
