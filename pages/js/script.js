@@ -21,16 +21,18 @@ function registration() {
             repeatPassword: document.querySelector("#repeatPassword").value
         })
     }).then(function (response) {
+        endLoad();
         return response.json().then(function (resp) {
-            endLoad();
-            if (resp["response"] === "OK") {
-                window.location = "/";
-            } else {
-                if (resp["response"] === "User already exists") {
-                    resp["response"] = "Пользователь уже существует";
+            setTimeout(function(resp) {
+                if (resp["response"] === "OK") {
+                    window.location = "/";
+                } else {
+                    if (resp["response"] === "User already exists") {
+                        resp["response"] = "Пользователь уже существует";
+                    }
+                    alert(resp["response"]);
                 }
-                alert(resp["response"]);
-            }
+            }, 10, resp);
         });
     });
 }
@@ -47,16 +49,18 @@ function login() {
             password: document.querySelector("#password").value
         })
     }).then(function (response) {
+        endLoad();
         return response.json().then(function (resp) {
-            endLoad();
-            if (resp["response"] === "Password and repeat password do not match") {
-                resp["response"] = "Пароль и повтор пароля не совпадают";
-            }
-            if (resp["response"] === "Вы успешно вошли в аккаунт") {
-                window.location = "/";
-            } else {
-                alert(resp["response"]);
-            }
+            setTimeout(function(resp) {
+                if (resp["response"] === "Password and repeat password do not match") {
+                    resp["response"] = "Пароль и повтор пароля не совпадают";
+                }
+                if (resp["response"] === "Вы успешно вошли в аккаунт") {
+                    window.location = "/";
+                } else {
+                    alert(resp["response"]);
+                }
+            }, 10, resp);
         });
     });
 }
