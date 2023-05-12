@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Май 01 2023 г., 14:36
+-- Время создания: Май 12 2023 г., 19:24
 -- Версия сервера: 8.0.24
--- Версия PHP: 8.0.8
+-- Версия PHP: 7.4.21
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,6 +24,20 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `comments`
+--
+
+CREATE TABLE `comments` (
+  `id` int NOT NULL,
+  `login` text NOT NULL,
+  `publication_time` text NOT NULL,
+  `text` text NOT NULL,
+  `post_id` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `posts`
 --
 
@@ -35,17 +49,6 @@ CREATE TABLE `posts` (
   `publication_time` text NOT NULL,
   `image` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Дамп данных таблицы `posts`
---
-
-INSERT INTO `posts` (`id`, `title`, `body`, `tag`, `publication_time`, `image`) VALUES
-(1, 'Post 1 title', 'Post 1 body', 'security', '17:27', '/pages/post_images/1.jpg'),
-(2, 'Post 2 title', 'Post 2 body', 'security', '17:27', '/pages/post_images/1.jpg'),
-(3, 'Post 3 files', 'Post 3 body', 'security', '17:33', '/pages/post_images/1.jpg'),
-(4, 'Post 4 title', 'Post 4 body', 'security', '17:34', '/pages/post_images/1.jpg'),
-(5, 'Post 5 title', 'Post 5 body', 'security', '17:34', '/pages/post_images/1.jpg');
 
 -- --------------------------------------------------------
 
@@ -72,6 +75,12 @@ INSERT INTO `users` (`id`, `login`, `password`) VALUES
 --
 
 --
+-- Индексы таблицы `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Индексы таблицы `posts`
 --
 ALTER TABLE `posts`
@@ -89,16 +98,22 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT для таблицы `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT для таблицы `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -24,6 +24,7 @@ include __DIR__ . "/controllers/PageController.php";
 include __DIR__ . "/controllers/AuthController.php";
 include __DIR__ . "/controllers/QueryController.php";
 include __DIR__ . "/controllers/PostController.php";
+include __DIR__ . "/controllers/CommentController.php";
 
 // Подключение файла с маршрутами
 include __DIR__ . "/routes/web.php";

@@ -84,10 +84,49 @@ class QueryController {
         return json_encode($posts);
     }
 
-    public static function getLastPostId() {
+    public static function getLastPostIdQuery() {
         global $orm;
         $orm->connect();
         $post = R::findLast("posts");
         return json_encode(array("id" => $post->id));
+    }
+
+    public static function addCommentQuery(string $login, string $publicationTime, string $text, int $postId) {
+        session_start();
+        global $orm;
+        $orm->connect();
+        $comment = R::dispense("comments");
+        $comment->login = $login;
+        $comment->publication_time = $publicationTime;
+        $comment->text = $text;
+        $comment->post_id = $postId;
+        R::store($comment);
+        return json_encode(
+            array(
+                "response" => "Комментарий успешно добавлен",
+                "login" => $_SESSION["user"]->login
+            )
+        );
+    }
+
+    public static function getCommentsQuery(int $postId) {
+        session_start();
+        global $orm;
+        $orm->connect();
+        $comments = R::find("comments", "post_id = ?", [$postId]);
+        if ($comments == null) {
+            return json_encode(
+                array(
+                    "response" => "Comments not found",
+                    "login" => $_SESSION["user"]->login
+                )
+            );
+        }
+        return json_encode(
+            array(
+                "login" => $_SESSION["user"]->login,
+                "comments" => $comments
+            )
+        );
     }
 }

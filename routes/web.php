@@ -16,3 +16,5 @@ $router->post("api/v1/getAllPosts", "PostController::getAllPosts");
 $router->post("api/v1/getPostById", "PostController::getPostById");
 $router->post("api/v1/getPostsByTag", "PostController::getPostsByTag");
 $router->post("api/v1/getLastPostId", "PostController::getLastPostId");
+$router->post("api/v1/addComment", "CommentController::addComment");
+$router->post("api/v1/getComments", "CommentController::getComments");

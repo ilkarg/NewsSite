@@ -23,7 +23,7 @@ function registration() {
     }).then(function (response) {
         endLoad();
         return response.json().then(function (resp) {
-            setTimeout(function(resp) {
+            setTimeout(function (resp) {
                 if (resp["response"] === "OK") {
                     window.location = "/";
                 } else {
@@ -51,7 +51,7 @@ function login() {
     }).then(function (response) {
         endLoad();
         return response.json().then(function (resp) {
-            setTimeout(function(resp) {
+            setTimeout(function (resp) {
                 if (resp["response"] === "Password and repeat password do not match") {
                     resp["response"] = "Пароль и повтор пароля не совпадают";
                 }
@@ -94,10 +94,9 @@ function clearAddPostForm() {
 }
 
 function addPost() {
-    startLoad();
     let date = new Date();
     let hours = date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`;
-    let minutes = date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`; 
+    let minutes = date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`;
     let image = document.querySelector("#postImage").files[0];
     let formData = new FormData();
     formData.append("title", document.querySelector("#postTitle").value);
@@ -111,6 +110,7 @@ function addPost() {
     }).then(function (response) {
         return response.json().then(function (resp) {
             if (resp["response"] === "Пост успешно создан") {
+                startLoad();
                 closeAddPostModal();
             }
             fetch(`${window.location.origin}/api/v1/getLastPostId`, {
@@ -118,10 +118,10 @@ function addPost() {
             }).then(function (response) {
                 return response.json().then(function (resp) {
                     createPostCard(
-                        formData.get("title"), 
-                        formData.get("tag"), 
-                        formData.get("publicationTime"), 
-                        resp["id"], 
+                        formData.get("title"),
+                        formData.get("tag"),
+                        formData.get("publicationTime"),
+                        resp["id"],
                         `/pages/post_images/${image.name}`
                     );
                     endLoad();
@@ -218,7 +218,7 @@ function getPostsByTag(tag) {
     let titleNews = document.createElement("div");
     titleNews.classList.add("title-news");
     titleNews.innerHTML = `<h1>${translateTag(tag)}</h1>`;
-    
+
     post.appendChild(titleNews);
     document.querySelector("#post-container").appendChild(post);
 
@@ -269,10 +269,10 @@ function getAllPosts() {
     startLoad();
     fetch(`${window.location.origin}/api/v1/getAllPosts`, {
         method: 'POST'
-    }).then(function(response) {
-        return response.json().then(function(resp) {
+    }).then(function (response) {
+        return response.json().then(function (resp) {
             if (!resp["response"] && Object.keys(resp).length > 0) {
-                Object.keys(resp).map(function(key) {
+                Object.keys(resp).map(function (key) {
                     createPostCard(resp[key].title, resp[key].tag, resp[key].publication_time, resp[key].id, resp[key].image);
                 });
             }
@@ -347,7 +347,7 @@ function createFullPost(title, body, tag, publicationTime, image) {
     pPublicationTime.classList.add("time", "me-auto");
     pPublicationTime.innerText = publicationTime;
     divNewsInfo.appendChild(aTag);
-    divNewsInfo.appendChild(pPublicationTime); 
+    divNewsInfo.appendChild(pPublicationTime);
 
     let divImageNews = document.createElement("div");
     divImageNews.classList.add("post-image");
@@ -369,10 +369,136 @@ function createFullPost(title, body, tag, publicationTime, image) {
     post.appendChild(divNewsInfo);
     post.appendChild(divImageNews);
     post.appendChild(divBodyNews);
+    post.appendChild(createCommentsForm());
 
     let row = document.createElement("div");
     row.classList.add("row");
     row.appendChild(post);
 
     document.querySelector("#post-container").appendChild(row);
+}
+
+function createCommentsForm() {
+    let divComments = document.createElement("div");
+    divComments.classList.add("comments");
+
+    let h1Header = document.createElement("h1");
+    h1Header.innerText = "Комментарии";
+
+    let divCreateInput = document.createElement("div");
+    divCreateInput.classList.add("create-input");
+    let labelLogin = document.createElement("label");
+    labelLogin.for = "postBody";
+    labelLogin.id = "login";
+    labelLogin.innerText = "";
+    let textareaComment = document.createElement("textarea");
+    textareaComment.id = "postBody";
+    textareaComment.name = "postBody";
+    textareaComment.rows = "10";
+    textareaComment.cols = "45";
+    let divBtn = document.createElement("div");
+    divBtn.classList.add("btn-comments", "text-end");
+    let btn = document.createElement("button");
+    btn.type = "button";
+    btn.id = "button-send";
+    btn.classList.add("btn", "ms-auto");
+    btn.onclick = function() {
+        if (document.querySelector("#login").innerText !== "") {
+            addComment();
+        }
+    };
+    btn.innerText = "Отправить";
+
+    divBtn.appendChild(btn);
+    divCreateInput.appendChild(labelLogin);
+    divCreateInput.appendChild(textareaComment);
+    divCreateInput.appendChild(divBtn);
+
+    divComments.appendChild(h1Header);
+    divComments.appendChild(divCreateInput);
+
+    return divComments;
+}
+
+function getComments() {
+    if (!window.location.search.startsWith("?id=")) {
+        return;
+    }
+    startLoad();
+    fetch(`${window.location.origin}/api/v1/getComments`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            postId: window.location.search.replace("?id=", "")
+        })
+    }).then(function (response) {
+        return response.json().then(function (resp) {
+            if (resp["login"]) {
+                document.querySelector("#login").innerText = resp["login"];
+            }
+
+            if (!resp["response"] && Object.keys(resp).length > 0) {
+                Object.keys(resp["comments"]).map(function (key) {
+                    createComment(resp["comments"][key].login, resp["comments"][key].publication_time, resp["comments"][key].text);
+                });
+            }
+
+            endLoad();
+        });
+    });
+}
+
+function createComment(login, time, text) {
+    let divComment = document.createElement("div");
+    divComment.classList.add("block-comments");
+
+    let divInfo = document.createElement("div");
+    divInfo.classList.add("fio", "d-flex");
+    let h1Login = document.createElement("h1");
+    h1Login.innerText = login;
+    let pPublicationTime = document.createElement("p");
+    pPublicationTime.classList.add("time", "ms-auto");
+    pPublicationTime.innerText = time;
+
+    divInfo.appendChild(h1Login);
+    divInfo.appendChild(pPublicationTime);
+
+    let pText = document.createElement("p");
+    pText.innerHTML = text;
+
+    divComment.appendChild(divInfo);
+    divComment.appendChild(pText);
+
+    document.querySelector(".comments").appendChild(divComment);
+}
+
+function addComment() {
+    startLoad();
+    let postId = window.location.search.replace("?id=", "");
+    let date = new Date();
+    let hours = date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`;
+    let minutes = date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`;
+    let publicationTime = `${hours}:${minutes}`;
+    let text = document.querySelector("#postBody").value;
+    fetch(`${window.location.origin}/api/v1/addComment`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            publicationTime: publicationTime,
+            text: text,
+            postId: postId
+        })
+    }).then(function (response) {
+        endLoad();
+        document.querySelector("#postBody").value = "";
+        return response.json().then(function (resp) {
+            if (resp["response"] === "Комментарий успешно добавлен") {
+                createComment(resp["login"], publicationTime, text);
+            }
+        });
+    });
 }

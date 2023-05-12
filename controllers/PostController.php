@@ -50,7 +50,7 @@ class PostController {
     }
 
     public static function getLastPostId() {
-        $id = QueryController::getLastPostId();
+        $id = QueryController::getLastPostIdQuery();
         echo $id;
     }
 }
