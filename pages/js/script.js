@@ -241,6 +241,8 @@ function getPostsByTag(tag) {
                     createPostCard(resp[key].title, resp[key].tag, resp[key].publication_time, key, resp[key].image);
                 });
                 endLoad();
+            } else {
+                endLoad();
             }
         });
     });
