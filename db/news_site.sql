@@ -1,12 +1,3 @@
-CREATE TABLE IF NOT EXISTS `comments` (
-    id INTEGER PRIMARY KEY,
-    login TEXT,
-    publication_time TEXT,
-    text TEXT,
-    post_id INTEGER,
-    FOREIGN KEY (post_id) REFERENCES posts (id)
-);
-
 CREATE TABLE IF NOT EXISTS `posts` (
     id INTEGER PRIMARY KEY,
     title TEXT,
@@ -14,6 +5,15 @@ CREATE TABLE IF NOT EXISTS `posts` (
     tag TEXT,
     publication_time TEXT,
     image TEXT
+);
+
+CREATE TABLE IF NOT EXISTS `comments` (
+    id INTEGER PRIMARY KEY,
+    login TEXT,
+    publication_time TEXT,
+    text TEXT,
+    post_id INTEGER,
+    FOREIGN KEY (post_id) REFERENCES posts (id)
 );
 
 CREATE TABLE IF NOT EXISTS `users` (
