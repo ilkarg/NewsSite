@@ -3,7 +3,8 @@ CREATE TABLE IF NOT EXISTS `comments` (
     login TEXT,
     publication_time TEXT,
     text TEXT,
-    post_id INTEGER
+    post_id INTEGER,
+    FOREIGN KEY (post_id) REFERENCES posts (id)
 );
 
 CREATE TABLE IF NOT EXISTS `posts` (
