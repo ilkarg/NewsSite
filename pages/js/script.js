@@ -201,8 +201,8 @@ function getPostById(id) {
         return response.json().then(function (resp) {
             if (!resp["response"] && Object.keys(resp).length > 0) {
                 let key = Object.keys(resp)[0];
-                let body = resp[key].body.replaceAll("\n", "<br>");
-                createFullPost(resp[key].title, body, resp[key].tag, resp[key].publication_time, resp[key].image);
+                //let body = resp[key].body.replaceAll("\n", "<br>");
+                createFullPost(resp[key].title, resp[key].body, resp[key].tag, resp[key].publication_time, resp[key].image);
             }
             endLoad();
         });
