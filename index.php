@@ -1,32 +1,30 @@
 <?php
 
 // Подключение системных библиотек
-include __DIR__ . "/app/PHPRouter/Router.php";
-include __DIR__ . '/app/PHPOrm/SQLite.php';
-include __DIR__ . "/app/PHPTemplater/Template.php";
-include __DIR__ . "/app/PHPView/View.php";
-include __DIR__ . "/app/PHPRequester/Request.php";
-include __DIR__ . "/app/PHPHash/Hash.php";
-include __DIR__ . "/app/PHPModel/Model.php";
+include __DIR__ . '/vendor/autoload.php';
+include __DIR__ . '/app/PHPTemplater/Template.php';
+include __DIR__ . '/app/PHPView/View.php';
+include __DIR__ . '/app/PHPRequester/Request.php';
+include __DIR__ . '/app/PHPHash/Hash.php';
 
 // Подключение системных пространств имен
 use PHPTemplater\Template;
 use PHPRequester\Request;
-use PHPRouter\Router;
+use Pecee\SimpleRouter\SimpleRouter;
 
 // Создание системных объектов
-$router = new Router();
-$orm = new SQLite(__DIR__ . "/db/news_site.db");
 $request = new Request();
 
+// Подключение файла для подключения к БД
+include __DIR__ . '/database/bootstrap.php';
+
 // Подключение контроллеров
-include __DIR__ . "/controllers/PageController.php";
-include __DIR__ . "/controllers/AuthController.php";
-include __DIR__ . "/controllers/QueryController.php";
-include __DIR__ . "/controllers/PostController.php";
-include __DIR__ . "/controllers/CommentController.php";
+include __DIR__ . '/controllers/PageController.php';
+include __DIR__ . '/controllers/AuthController.php';
+include __DIR__ . '/controllers/PostController.php';
+include __DIR__ . '/controllers/CommentController.php';
 
 // Подключение файла с маршрутами
-include __DIR__ . "/routes/web.php";
+include __DIR__ . '/routes/web.php';
 
-$router->exec();
+SimpleRouter::start();

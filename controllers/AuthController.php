@@ -1,50 +1,79 @@
 <?php
 
-include __DIR__ . "/../models/User.php";
+require __DIR__ . "/../models/User.php";
+
+use PHPSystem\System;
+use PHPHash\Hash;
+use Models\User;
 
 class AuthController {
-	public static function login() {
-        global $router;
-        $data = $router->getPostRouteData();
-        if ($data != null) {
-            $user_model = new User($data["login"], $data["password"]);
-            echo QueryController::loginQuery($user_model->login, $user_model->password);
-        } else {
-            echo json_encode(array("response" => "Данные не дошли или неверные имена полей"));
+	public function registration() {
+        session_start();
+        if (isset($_SESSION["user"])) {
+            echo json_encode([
+                "response" => "Вы уже находитесь в аккаунте"
+            ]);
+            return;
         }
+        $data = System::getRequestData();
+        if ($data->password != $data->repeatPassword) {
+            echo json_encode([
+                "response" => "Пароль и повтор пароля не совпадают"
+            ]);
+            return;
+        }
+        $user = User::create([
+            "login" => $data->login,
+            "password" => Hash::sha256($data->password, "", 1)
+        ]);
+        $_SESSION["user"] = $user;
+        echo json_encode([
+            "response" => "OK"
+        ]);
     }
 
-    public static function registration() {
-        global $router;
-        $data = $router->getPostRouteData();
-        if ($data != null) {
-            if ($data["password"] == $data["repeatPassword"]) {
-                $user_model = new User($data["login"], $data["password"]);
-                $result = $user_model->validate();
-                if ($result["status"]) {
-                    echo QueryController::registrationQuery($user_model->login, $user_model->password);
-                } else {
-                    echo json_encode(array("response" => $result["message"]));
-                }
-            } else {
-                echo json_encode(array("response" => "Password and repeat password do not match"));
-            }
-        } else {
-            echo json_encode(array("response" => "Данные не дошли или неверные имена полей"));
+    public function login() {
+        session_start();
+        if (isset($_SESSION["user"])) {
+            echo json_encode([
+                "response" => "Вы уже находитесь в аккаунте"
+            ]);
+            return;
         }
+        $data = System::getRequestData();
+        $user = User::where([
+            ["login", "=", $data->login],
+            ["password", "=", Hash::sha256($data->password, "", 1)]
+        ])->first();
+
+        if ($user) {
+            $_SESSION["user"] = $user;
+            echo json_encode([
+                "response" => "Вы успешно вошли в аккаунт"
+            ]);
+            return;
+        }
+
+        echo json_encode([
+            "response" => "Неверные логин или пароль"
+        ]);
     }
 
-    public static function logout() {
+    public function logout() {
         session_start();
         if (isset($_SESSION["user"])) {
             unset($_SESSION["user"]);
-            echo json_encode(array("response" => "Вы успешно вышли из аккаунта"));
+            echo json_encode([
+                "response" => "Вы успешно вышли из аккаунта"
+            ]);
         } else {
-            echo json_encode(array("response" => "Вы и так не находитесь в аккаунте"));
+            echo json_encode([
+                "response" => "Вы и так не находитесь в аккаунте"
+            ]);
         }
     }
 
-    public static function isAdmin() {
+    public function isAdmin() {
         session_start();
         if (isset($_SESSION["user"]) && $_SESSION["user"]->login == "admin") {
             echo json_encode(array("response" => "admin"));
@@ -53,8 +82,10 @@ class AuthController {
         }
     }
 
-    public static function isAuthorized() {
+    public function isAuthorized() {
         session_start();
-        echo json_encode(array("response" => isset($_SESSION["user"])));
+        echo json_encode([
+            "response" => isset($_SESSION["user"])
+        ]);
     }
 }

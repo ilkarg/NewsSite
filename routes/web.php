@@ -1,20 +1,29 @@
 <?php
 
-$router->get("/", "PageController::index");
-$router->get("login", "PageController::login");
-$router->get("registration", "PageController::registration");
-$router->get("posts", "PageController::posts");
+use Pecee\SimpleRouter\SimpleRouter as Route;
 
-$router->post("api/v1/login", "AuthController::login");
-$router->post("api/v1/registration", "AuthController::registration");
-$router->post("api/v1/logout", "AuthController::logout");
-$router->post("api/v1/isAuthorized", "AuthController::isAuthorized");
-$router->post("api/v1/isAdmin", "AuthController::isAdmin");
-$router->post("api/v1/addPost", "PostController::addPost");
-$router->post("api/v1/getPosts", "PostController::getPosts");
-$router->post("api/v1/getAllPosts", "PostController::getAllPosts");
-$router->post("api/v1/getPostById", "PostController::getPostById");
-$router->post("api/v1/getPostsByTag", "PostController::getPostsByTag");
-$router->post("api/v1/getLastPostId", "PostController::getLastPostId");
-$router->post("api/v1/addComment", "CommentController::addComment");
-$router->post("api/v1/getComments", "CommentController::getComments");
+Route::get("/", [PageController::class, "index"]);
+Route::get("/login", [PageController::class, "login"]);
+Route::get("/registration", [PageController::class, "registration"]);
+Route::get("/posts/{tag}", [PageController::class, "posts"]);
+Route::get("/post/{id}", [PageController::class, "post"]);
+
+Route::group(["prefix" => "api/v1"], function() {
+	Route::post("/login", [AuthController::class, "login"]);
+	Route::post("/registration", [AuthController::class, "registration"]);
+	Route::post("/logout", [AuthController::class, "logout"]);
+
+	Route::get("/isAuthorized", [AuthController::class, "isAuthorized"]);
+	Route::get("/isAdmin", [AuthController::class, "isAdmin"]);
+
+	Route::post("/addPost", [PostController::class, "addPost"]);
+
+	Route::get("/getPosts", [PostController::class, "getPosts"]);
+	Route::get("/getAllPosts", [PostController::class, "getAllPosts"]);
+	Route::get("/getPostById/{id}", [PostController::class, "getPostById"]);
+	Route::get("/getPostsByTag/{tag}", [PostController::class, "getPostsByTag"]);
+
+	Route::post("/addComment", [CommentController::class, "addComment"]);
+
+	Route::get("/getComments/{id}", [CommentController::class, "getComments"]);
+});

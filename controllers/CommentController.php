@@ -2,38 +2,39 @@
 
 include __DIR__ . "/../models/Comment.php";
 
+use PHPSystem\System;
+use Models\Comment;
+
 class CommentController {
-	public static function addComment() {
+    public function addComment() {
         session_start();
-        global $router;
-        $data = $router->getPostRouteData();
-        if ($data != null) {
-            $comment_model = new Comment(
-                $_SESSION["user"]->login,
-                $data["publicationTime"],
-                $data["text"],
-                $data["postId"]
-            );
-            $comment = QueryController::addCommentQuery(
-                $comment_model->login,
-                $comment_model->publicationTime,
-                $comment_model->text,
-                $comment_model->postId
-            );
-            echo $comment;
-        } else {
-            echo json_encode(array("response" => "Данные не дошли или неверные имена полей"));
-        }
+        $data = System::getRequestData();
+        Comment::create([
+            "login" => $data->login,
+            "publication_time" => $data->publicationTime,
+            "text" => $data->text,
+            "post_id" => $data->postId
+        ]);
+        echo json_encode([
+            "response" => "Комментарий успешно добавлен",
+            "login" => isset($_SESSION["user"]) ? $_SESSION["user"]->login : null
+        ]);
     }
 
-    public static function getComments() {
-        global $router;
-        $data = $router->getPostRouteData();
-        if ($data != null) {
-            $comments = QueryController::getCommentsQuery($data["postId"]);
-            echo $comments;
-        } else {
-            echo json_encode(array("response" => "Данные не дошли или неверные имена полей"));
+    public function getComments(int $id) {
+        session_start();
+        $comments = Comment::where([
+            ["post_id", "=", $id]
+        ])->get();
+        if ($comments) {
+            echo json_encode([
+                "comments" => $comments,
+                "login" => isset($_SESSION["user"]) ? $_SESSION["user"]->login : null
+            ]);
+            return;
         }
+        echo json_encode([
+            "response" => "Комментарии не найдены"
+        ]);
     }
 }

@@ -104,7 +104,7 @@ function addPost() {
     formData.append("tag", document.querySelector("#postTag").value);
     formData.append("publicationTime", `${hours}:${minutes}`);
     formData.append("image", image, image.name);
-    fetch(`${window.location.origin}/api/v1/addPost`, {
+    fetch(`${window.location.origin}/api/v1/addPost/`, {
         method: 'POST',
         body: formData
     }).then(function (response) {
@@ -113,55 +113,32 @@ function addPost() {
                 startLoad();
                 closeAddPostModal();
             }
-            fetch(`${window.location.origin}/api/v1/getLastPostId`, {
-                method: 'POST'
-            }).then(function (response) {
-                return response.json().then(function (resp) {
-                    createPostCard(
-                        formData.get("title"),
-                        formData.get("tag"),
-                        formData.get("publicationTime"),
-                        resp["id"],
-                        `/pages/post_images/${image.name}`
-                    );
-                    endLoad();
-                })
-            });
+            createPostCard(
+                formData.get("title"),
+                formData.get("tag"),
+                formData.get("publicationTime"),
+                resp.id,
+                `/pages/post_images/${image.name}`
+            );
+            endLoad();
         });
     });
 }
 
 function getPosts() {
-    let args = window.location.search;
-    if (args.length === 0) {
+    let tag = document.location.href.substring(
+        document.location.href.lastIndexOf("/"), 
+        document.location.href.length
+    ).replace("/", "");
+    if (["security", "administration", "social", "healthcare", "education"].indexOf(tag) === -1) {
         redirectToSecurityNews();
     }
-    args = args.split("&");
-    if (args.length > 1) {
-        redirectToSecurityNews();
-    }
-    args[0] = args[0].substring(1, args[0].length);
-    args.map(function (arg) {
-        if (!(arg.startsWith("id=") || arg.startsWith("tag="))) {
-            redirectToSecurityNews();
-        }
-
-        if (arg.startsWith("tag=")) {
-            let tag = arg.substring(arg.indexOf("=") + 1, arg.length);
-            if (["security", "administration", "social", "healthcare", "education"].indexOf(tag) === -1) {
-                redirectToSecurityNews();
-            }
-            getPostsByTag(tag);
-        } else if (arg.startsWith("id=")) {
-            let id = arg.substring(arg.indexOf("=") + 1, arg.length);
-            getPostById(id);
-        }
-    })
+    getPostsByTag(tag);
 }
 
 function isAdmin() {
     fetch(`${window.location.origin}/api/v1/isAdmin`, {
-        method: 'POST'
+        method: 'GET'
     }).then(function (response) {
         return response.json().then(function (resp) {
             if (resp["response"] === "admin") {
@@ -173,7 +150,7 @@ function isAdmin() {
 
 function isAuthorized() {
     fetch(`${window.location.origin}/api/v1/isAuthorized`, {
-        method: 'POST'
+        method: 'GET'
     }).then(function (response) {
         return response.json().then(function (resp) {
             let button = document.querySelector("#authButton");
@@ -187,24 +164,21 @@ function isAuthorized() {
     });
 }
 
-function getPostById(id) {
+function getPostById() {
+    let id = document.location.href.substring(
+        document.location.href.lastIndexOf("/"), 
+        document.location.href.length
+    ).replace("/", "");
     startLoad();
-    fetch(`${window.location.origin}/api/v1/getPostById`, {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            id: id
-        })
+    fetch(`${window.location.origin}/api/v1/getPostById/${id}`, {
+        method: 'GET'
     }).then(function (response) {
         return response.json().then(function (resp) {
             if (!resp["response"] && Object.keys(resp).length > 0) {
-                let key = Object.keys(resp)[0];
-                //let body = resp[key].body.replaceAll("\n", "<br>");
-                createFullPost(resp[key].title, resp[key].body, resp[key].tag, resp[key].publication_time, resp[key].image);
+                createFullPost(resp.title, resp.body, resp.tag, resp.publication_time, resp.image);
             }
             endLoad();
+            getComments();
         });
     });
 }
@@ -225,14 +199,8 @@ function getPostsByTag(tag) {
     document.title = translateTag(tag);
     document.querySelector(`#${tag}`).classList.add("active");
 
-    fetch(`${window.location.origin}/api/v1/getPostsByTag`, {
-        method: 'POST',
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            tag: tag
-        })
+    fetch(`${window.location.origin}/api/v1/getPostsByTag/${tag}`, {
+        method: 'GET'
     }).then(function (response) {
         return response.json().then(function (resp) {
             if (!resp["response"] && Object.keys(resp).length > 0) {
@@ -249,7 +217,7 @@ function getPostsByTag(tag) {
 }
 
 function redirectToSecurityNews() {
-    window.location = "/posts/?tag=security";
+    window.location = "/posts/security";
     return;
 }
 
@@ -270,12 +238,12 @@ function translateTag(tag) {
 function getAllPosts() {
     startLoad();
     fetch(`${window.location.origin}/api/v1/getAllPosts`, {
-        method: 'POST'
+        method: 'GET'
     }).then(function (response) {
         return response.json().then(function (resp) {
-            if (!resp["response"] && Object.keys(resp).length > 0) {
-                Object.keys(resp).map(function (key) {
-                    createPostCard(resp[key].title, resp[key].tag, resp[key].publication_time, resp[key].id, resp[key].image);
+            if (!resp["response"]) {
+                resp.map(function (post) {
+                    createPostCard(post.title, post.tag, post.publication_time, post.id, post.image);
                 });
             }
             endLoad();
@@ -284,9 +252,11 @@ function getAllPosts() {
 }
 
 function createPostCard(title, tag, publicationTime, id, image) {
-    let pageTag = window.location.search;
-    pageTag = pageTag.substring(pageTag.indexOf("=") + 1, pageTag.length);
-    if (pageTag !== "" && pageTag !== tag) {
+    let pageTag = document.location.href.substring(
+        document.location.href.lastIndexOf("/"), 
+        document.location.href.length
+    ).replace("/", "");
+    if (pageTag !== tag && pageTag !== "") {
         return;
     }
 
@@ -320,7 +290,7 @@ function createPostCard(title, tag, publicationTime, id, image) {
     let aTitle = document.createElement("a");
     aTitle.innerHTML = title;
     aTitle.classList.add("title-block");
-    aTitle.href = `/posts/?id=${id}`;
+    aTitle.href = `/post/${id}`;
 
     divBody.appendChild(divImgNews);
     divBody.appendChild(divInfoNews);
@@ -342,7 +312,7 @@ function createFullPost(title, body, tag, publicationTime, image) {
     let divNewsInfo = document.createElement("div");
     divNewsInfo.classList.add("post-tag-time", "d-flex");
     let aTag = document.createElement("a");
-    aTag.href = "/posts/?tag=security";
+    aTag.href = "/posts/security";
     aTag.classList.add("tag");
     aTag.innerText = translateTag(tag);
     let pPublicationTime = document.createElement("p");
@@ -423,18 +393,16 @@ function createCommentsForm() {
 }
 
 function getComments() {
-    if (!window.location.search.startsWith("?id=")) {
+    if (window.location.href.endsWith("/posts") || window.location.href.endsWith("/posts/")) {
         return;
     }
     startLoad();
-    fetch(`${window.location.origin}/api/v1/getComments`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            postId: window.location.search.replace("?id=", "")
-        })
+    let id = document.location.href.substring(
+        document.location.href.lastIndexOf("/"), 
+        document.location.href.length
+    ).replace("/", "");
+    fetch(`${window.location.origin}/api/v1/getComments/${id}`, {
+        method: "GET"
     }).then(function (response) {
         return response.json().then(function (resp) {
             if (resp["login"]) {
@@ -478,7 +446,10 @@ function createComment(login, time, text) {
 
 function addComment() {
     startLoad();
-    let postId = window.location.search.replace("?id=", "");
+    let postId = document.location.href.substring(
+        document.location.href.lastIndexOf("/"), 
+        document.location.href.length
+    ).replace("/", "");
     let date = new Date();
     let hours = date.getHours() > 9 ? date.getHours() : `0${date.getHours()}`;
     let minutes = date.getMinutes() > 9 ? date.getMinutes() : `0${date.getMinutes()}`;

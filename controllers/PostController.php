@@ -1,56 +1,69 @@
 <?php
 
-include __DIR__ . "/../models/Post.php";
+require __DIR__ . "/../models/Post.php";
+
+use PHPSystem\System;
+use Models\Post;
 
 class PostController {
-    public static function addPost() {
-        global $router;
-        $data = $router->getPostRouteData();
-        if ($data != null) {
-            copy($_FILES["image"]["tmp_name"], __DIR__ . "/../pages/post_images/" . $_FILES["image"]["name"]);
-            $post_model = new Post($data["title"], $data["body"], $data["tag"], $data["publicationTime"], "/pages/post_images/" . $_FILES["image"]["name"]);
-            $post = QueryController::addPostQuery(
-                $post_model->title, 
-                $post_model->body,
-                $post_model->tag,
-                $post_model->publicationTime,
-                $post_model->image
-            );
-            echo $post;
-        } else {
-            echo json_encode(array("response" => "Данные не дошли или неверные имена полей"));
+    public function addPost() {
+        copy($_FILES["image"]["tmp_name"], __DIR__ . "/../pages/post_images/" . $_FILES["image"]["name"]);
+        $post = Post::create([
+            "title" => $_POST["title"],
+            "body" => $_POST["body"],
+            "tag" => $_POST["tag"],
+            "publication_time" => $_POST["publicationTime"],
+            "image" => "/pages/post_images/" . $_FILES["image"]["name"]
+        ]);
+        echo json_encode([
+            "response" => "Пост успешно создан",
+            "id" => $post->id
+        ]);
+    }
+
+    public function getPostById(int $id) {
+        $post = Post::find($id);
+        if ($post == null) {
+            echo json_encode([
+                "response" => "Указанный пост не найден"
+            ]);
+            return;
         }
+        echo json_encode($post);
     }
 
-    public static function getPostById() {
-        global $router;
-        $data = $router->getPostRouteData();
-        if ($data != null) {
-            $post = QueryController::getPostByIdQuery($data["id"]);
-            echo $post;
-        } else {
-            echo json_encode(array("response" => "Данные не дошли или неверные имена полей"));
+    public function getPostsByTag(string $tag) {
+        $posts = Post::where("tag", $tag)->get();
+        if ($posts) {
+            echo json_encode($posts);
+            return;
         }
+        echo json_encode([
+            "response" => "Посты не найдены"
+        ]);
     }
 
-    public static function getPostsByTag() {
-        global $router;
-        $data = $router->getPostRouteData();
-        if ($data != null) {
-            $posts = QueryController::getPostsByTagQuery($data["tag"]);
-            echo $posts;
-        } else {
-            echo json_encode(array("response" => "Данные не дошли или неверные имена полей"));
+	public function getAllPosts() {
+        $posts = Post::all();
+        if ($posts) {
+            echo json_encode($posts);
+            return;
         }
+        echo json_encode([
+            "response" => "Посты не найдены"
+        ]);
     }
 
-	public static function getAllPosts() {
-        $posts = QueryController::getAllPostsQuery();
-        echo $posts;
-    }
-
-    public static function getLastPostId() {
-        $id = QueryController::getLastPostIdQuery();
-        echo $id;
+    public function getPostGroup(string $tag) {
+        $posts = Post::where([
+            ["tag", "=", $tag]
+        ])->get();
+        if ($posts) {
+            echo json_encode($posts);
+            return;
+        }
+        echo json_encode([
+            "response" => "Посты не найдены"
+        ]);
     }
 }
