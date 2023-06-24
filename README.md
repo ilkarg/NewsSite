@@ -9,12 +9,12 @@ IcebergPHP - это современный фреймворк для веб-пр
 3) Проверяем, чтобы в [bootstrap.php](database/bootstrap.php) были указаны правильные данные для подключения к Базе Данных
 4) Для ОС Windows подключаем все зависимости из файла [php.ini](ini/php.ini)
 5) Перезапускаем ```terminal``` или ```cmd```, если до этого был открыт
-6) Открываем ```terminal``` или ```cmd``` и вводим ```php helper start``` или ```php helper start 8000```, где вместо 8000 вводим нужный порт
+6) Открываем ```terminal``` или ```cmd``` и вводим ```php iceberg start``` или ```php iceberg start 8000```, где вместо 8000 вводим нужный порт
 7) После запуска сайт будет доступен на ip адресах: 127.0.0.1:8000, 192.168...:8000 и другие
 
 1) Скачать или склонировать репозиторий в удобное место
 2) Написать код
-3) ```php helper start``` или ```php helper start 8000```, где вместо 8000 вводим нужный порт
+3) ```php iceberg start``` или ```php iceberg start 8000```, где вместо 8000 вводим нужный порт
 4) Наслаждаться результатом
 ## Документация
 - [PHPExceptionHandler](docs/PHPExceptionHandler.md)
@@ -34,10 +34,10 @@ models/               Модели
 pages/                Страницы
 routes/               Маршруты
 ```
-## Использование helper
+## Использование iceberg
 **1. Создание контроллера**
 ```sh
-php helper create-controller TestController
+php iceberg create-controller TestController
 ```
 
 **Описание:** Создает контроллер TestController в директории controllers. Если директория controllers отсутствует, то создает ее. Самостоятельно импторирует контроллер в файл index.php
@@ -46,7 +46,7 @@ php helper create-controller TestController
 
 **2. Создание модели**
 ```sh
-php helper create-model User
+php iceberg create-model User
 ```
 
 **Описание:** Создает модель User в директории models. Если директория models отсутствует, то создает ее
